@@ -24,6 +24,9 @@ jobs:
     - name: Build_arm64
       run: GOOS=linux GOARCH=arm64 CGO_ENABLES=0 go build -ldflags "-s -w" -tags "go_json" -p 4
 
+    - name: List files in the repository
+      run: ls ${{ github.workspace }}
+
     - name: Upload arm64
       uses: actions/upload-artifact@v4
       with:
