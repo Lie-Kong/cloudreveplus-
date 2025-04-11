@@ -4,7 +4,6 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -14,12 +13,8 @@ jobs:
         with:
           node-version: '16.20.2'
       - name: node
-        run: cd assets
-      - run: yarn install
-      - run: yarn build
+        run: cd assets && yarn install && yarn build
       - name: packaged
-        run: cd build
-      - run: find . -name "*.map" -type f -delete
-      - run: cd ../../
+        run: cd assets/build && find . -name "*.map" -type f -delete
       - run: zip -r - assets/build >assets.zip
       
