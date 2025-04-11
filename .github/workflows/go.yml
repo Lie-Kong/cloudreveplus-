@@ -28,23 +28,17 @@ jobs:
     - name: Build_arm64
       run: GOOS=linux GOARCH=arm64 CGO_ENABLES=0 go build -o result/Cloudreve_arm64 -ldflags "-s -w" -tags "go_json" -p ${{ steps.cpu-cores.outputs.count }} -a
 
-    #- name: Upload arm64
-    #  uses: actions/upload-artifact@v4
-    #  with:
-    #      name: arm64
-    #      path: Cloudreve
-    
-    - name: Clean Cache
-      run: go clean -cache
+    - name: Upload arm64
+      uses: actions/upload-artifact@v4
+      with:
+          name: Cloudreve_arm64
+          path: result/Cloudreve_arm64
 
     - name: Build_amd64
       run: CGO_ENABLES=0 GOOS=linux GOARCH=amd64 go build -o result/Cloudreve_amd64 -ldflags "-s -w" -tags "go_json" -p ${{ steps.cpu-cores.outputs.count }} -a
 
-    - name: Upload result
+    - name: Upload amd64
       uses: actions/upload-artifact@v4
       with:
-          name: result
-          path: result/
-
-    - name: Clean Cache
-      run: go clean -cache
+          name: Cloudreve_amd64
+          path: result/Cloudreve_amd64
