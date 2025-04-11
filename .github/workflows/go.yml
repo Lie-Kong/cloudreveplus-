@@ -16,28 +16,35 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Get number of CPU cores
+      uses: SimenB/github-actions-cpu-cores@v2
+      id: cpu-cores
+
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
         go-version: '1.20'
 
     - name: Build_arm64
-      run: GOOS=linux GOARCH=arm64 CGO_ENABLES=0 go build -ldflags "-s -w" -tags "go_json" -p 4
+      run: GOOS=linux GOARCH=arm64 CGO_ENABLES=0 go build -o result/Cloudreve_arm64 -ldflags "-s -w" -tags "go_json" -p ${{ steps.cpu-cores.outputs.count }} -a
 
-    - name: List files in the repository
-      run: ls ${{ github.workspace }}
+    #- name: Upload arm64
+    #  uses: actions/upload-artifact@v4
+    #  with:
+    #      name: arm64
+    #      path: Cloudreve
+    
+    - name: Clean Cache
+      run: go clean -cache
 
-    - name: Upload arm64
-      uses: actions/upload-artifact@v4
-      with:
-          name: arm64
-          path: Cloudreve
-      
     - name: Build_amd64
-      run: CGO_ENABLES=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -tags "go_json" -p 4
+      run: CGO_ENABLES=0 GOOS=linux GOARCH=amd64 go build -o result/Cloudreve_amd64 -ldflags "-s -w" -tags "go_json" -p ${{ steps.cpu-cores.outputs.count }} -a
 
-    - name: Upload amd64
+    - name: Upload result
       uses: actions/upload-artifact@v4
       with:
-          name: amd64
-          path: Cloudreve
+          name: result
+          path: result/
+
+    - name: Clean Cache
+      run: go clean -cache
